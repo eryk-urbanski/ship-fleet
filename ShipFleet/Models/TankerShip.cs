@@ -52,7 +52,7 @@ namespace ShipFleet.Models
             if (CurrentWeight + weightToAdd > MaxWeight)
                 throw new ArgumentException("Exceeds ship's maximum total weight");
 
-            tank.CurrentVolume += volume;
+            tank.SetCurrentVolume(tank.CurrentVolume + volume);
             currentWeight += weightToAdd;
 
             Console.WriteLine($"Tank {tankID} refueled with {volume} liters of {tank.FuelType}");
