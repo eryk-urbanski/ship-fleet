@@ -7,7 +7,7 @@ namespace ShipFleet.Models
     public abstract partial class Ship
     {
         // Properties
-        public string IMONumber { get; }
+        public string IMO { get; }
         public string Name { get; }
         public double Length { get; }
         public double Width { get; }
@@ -22,7 +22,7 @@ namespace ShipFleet.Models
             if (!IsValidDimensions(length, width))
                 throw new ArgumentException("Invalid ship width or length (both should be positive)");
 
-            IMONumber = imo;
+            IMO = imo;
             Name = name;
             Length = length;
             Width = width;

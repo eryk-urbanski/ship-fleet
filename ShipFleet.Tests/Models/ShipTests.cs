@@ -19,14 +19,14 @@ namespace ShipFleet.Tests.Models
             var ship = new TestShip(imo, name, length, width);
 
             // Assert
-            Assert.Equal(imo, ship.IMONumber);
+            Assert.Equal(imo, ship.IMO);
             Assert.Equal(name, ship.Name);
             Assert.Equal(length, ship.Length);
             Assert.Equal(width, ship.Width);
         }
 
         [Fact]
-        public void Constructor_InvalidIMONumberFormat_ThrowsArgumentException()
+        public void Constructor_InvalidIMOFormat_ThrowsArgumentException()
         {
             // Arrange
             var invalidIMO = "12345";
@@ -37,7 +37,7 @@ namespace ShipFleet.Tests.Models
         }
 
         [Fact]
-        public void Constructor_InvalidIMONumberChecksum_ThrowsArgumentException()
+        public void Constructor_InvalidIMOChecksum_ThrowsArgumentException()
         {
             var invalidIMO = "IMO 9074725"; // Invalid checksum
 
