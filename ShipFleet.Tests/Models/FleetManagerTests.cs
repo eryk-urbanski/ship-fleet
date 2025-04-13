@@ -162,5 +162,52 @@ namespace ShipFleet.Tests.Models
 
             Assert.Null(ship);
         }
+
+        [Fact]
+        public void UpdatePosition_WithExistingShip_UpdatesCurrentPositionAndHistory()
+        {
+            var manager = new FleetManager();
+            var tanker = new TankerShipBuilder()
+                                .WithIMO(imo)
+                                .WithName(name)
+                                .WithDimensions(length, width)
+                                .WithDieselTanks(numDieselTanks, dieselCapacities)
+                                .WithHeavyFuelTanks(numHeavyFuelTanks, heavyFuelCapacities)
+                                .WithMaxWeight(maxWeight)
+                                .Build();
+            manager.AddShip(tanker);
+
+            var position1 = new Position { Latitude = 34.0, Longitude = -120.0, Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+            var position2 = new Position { Latitude = 35.0, Longitude = -121.0, Timestamp = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds() };
+
+            manager.GetShipByIMO("IMO 9321483").UpdatePosition(position1);
+            manager.GetShipByIMO("IMO 9321483").UpdatePosition(position2);
+
+            Assert.Equal(position2.Latitude, tanker.GetCurrentPosition().Latitude);
+            Assert.Equal(position2.Longitude, tanker.GetCurrentPosition().Longitude);
+            Assert.Contains(position1, tanker.PositionHistory);
+            Assert.Contains(position2, tanker.PositionHistory);
+            Assert.Equal(2, tanker.PositionHistory.Count);
+        }
+
+        [Fact]
+        public void UpdatePosition_WithExistingShipWrongPosition_ThrowsArgumentOutOfRangeException()
+        {
+            var manager = new FleetManager();
+            var tanker = new TankerShipBuilder()
+                                .WithIMO(imo)
+                                .WithName(name)
+                                .WithDimensions(length, width)
+                                .WithDieselTanks(numDieselTanks, dieselCapacities)
+                                .WithHeavyFuelTanks(numHeavyFuelTanks, heavyFuelCapacities)
+                                .WithMaxWeight(maxWeight)
+                                .Build();
+            manager.AddShip(tanker);
+
+            var position = new Position { Latitude = 134.0, Longitude = -120.0, Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                manager.GetShipByIMO("IMO 9321483").UpdatePosition(position));
+        }
     }
 }
