@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShipFleet.Models;
 
-namespace ShipFleet.Models
+namespace ShipFleet
 {
     public class FleetManager
     {
@@ -37,10 +38,7 @@ namespace ShipFleet.Models
         // Perform operations specific to TankerShips (e.g., refuel)
         public void RefuelTankerShip(string imo, int tankId, double fuelAmount)
         {
-            var ship = fleet.OfType<TankerShip>().FirstOrDefault(s => s.IMO == imo);
-            if (ship == null)
-                throw new InvalidOperationException("Tanker ship not found.");
-
+            var ship = fleet.OfType<TankerShip>().FirstOrDefault(s => s.IMO == imo) ?? throw new InvalidOperationException("Tanker ship not found.");
             ship.RefuelTank(tankId, fuelAmount);
         }
 
@@ -57,10 +55,7 @@ namespace ShipFleet.Models
         // Update passenger list of a PassengerShip
         public void UpdatePassengerList(string imo, List<Passenger> newPassengerList)
         {
-            var ship = fleet.OfType<PassengerShip>().FirstOrDefault(s => s.IMO == imo);
-            if (ship == null)
-                throw new InvalidOperationException("Passenger ship not found.");
-
+            var ship = fleet.OfType<PassengerShip>().FirstOrDefault(s => s.IMO == imo) ?? throw new InvalidOperationException("Passenger ship not found.");
             ship.UpdatePassengerList(newPassengerList);
         }
 
